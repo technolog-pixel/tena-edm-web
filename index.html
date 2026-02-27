@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TENA EDM — Přesné CNC obrábění a EDM technologie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           RESET & BASE
+        ============================================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #EFEFEF;
+            --white: #FFFFFF;
+            --accent: #F5C400;
+            --accent-dark: #e6b800;
+            --text: #1A1A1A;
+            --text-secondary: #666666;
+            --border: #DDDDDD;
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-hover: 0 12px 48px rgba(0,0,0,0.14);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font: 'Exo 2', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ============================================================
+           LANGUAGE SWITCHER
+        ============================================================ */
+        #lang-switcher {
+            position: fixed;
+            top: 22px;
+            right: 28px;
+            z-index: 1100;
+            display: flex;
+            gap: 3px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 4px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .lang-btn {
+            padding: 7px 16px;
+            border: none;
+            background: transparent;
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 18px;
+            transition: var(--transition);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .lang-btn:hover {
+            color: var(--text);
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: var(--text);
+        }
+
+        /* ============================================================
+           SLIDE-IN NAVIGATION
+        ============================================================ */
+        #slide-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 270px;
+            background: var(--white);
+            z-index: 950;
+            transform: translateX(-100%);
+            transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 6px 0 40px rgba(0,0,0,0.13);
+            display: flex;
+            flex-direction: column;
+        }
+
+        #slide-nav.open {
+            transform: translateX(0);
+        }
+
+        .slide-nav-header {
+            padding: 40px 32px 28px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .slide-nav-logo img {
+            height: 38px;
+            width: auto;
+        }
+
+        .slide-nav-logo .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -1px;
+        }
+
+        .slide-nav-logo .logo-text span {
+            color: var(--accent);
+        }
+
+        #slide-nav ul {
+            list-style: none;
+            padding: 24px 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        #slide-nav ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 32px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            font-weight: 500;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            letter-spacing: 0.2px;
+        }
+
+        #slide-nav ul li a:hover,
+        #slide-nav ul li a.active {
+            color: var(--text);
+            border-left-color: var(--accent);
+            background: rgba(245,196,0,0.07);
+            padding-left: 38px;
+        }
+
+        .slide-nav-contact {
+            padding: 24px 32px;
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .slide-nav-contact a {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            transition: color 0.2s;
+        }
+
+        .slide-nav-contact a:hover {
+            color: var(--accent);
+        }
+
+        /* Nav Trigger */
+        #nav-trigger {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 940;
+            width: 44px;
+            height: 88px;
+            background: var(--white);
+            border-radius: 0 12px 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #nav-trigger.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #nav-trigger:hover {
+            background: var(--accent);
+        }
+
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        #nav-trigger:hover .hamburger span {
+            background: var(--text);
+        }
+
+        /* ============================================================
+           HERO SECTION
+        ============================================================ */
+        #hero {
+            min-height: 100vh;
+            background: linear-gradient(150deg, #F9F9F9 0%, #EFEFEF 40%, #E5E5E5 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Dot grid background */
+        #hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(0,0,0,0.08) 1px, transparent 1px);
+            background-size: 32px 32px;
+            mask-image: linear-gradient(to bottom right, transparent 20%, rgba(0,0,0,0.5) 60%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* Accent glow */
+        #hero::after {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(245,196,0,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 64px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .hero-logo .logo-text {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .hero-logo .logo-text span {
+            color: var(--accent);
+        }
+
+        .hero-contact-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+            padding-right: 140px; /* space for lang switcher */
+        }
+
+        .hero-contact-info a {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-contact-info a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero Nav Tabs — vertikální, pravá strana, průhledné pozadí */
+        .hero-nav {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .hero-nav-link {
+            padding: 7px 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            background: transparent;
+            border-radius: 0;
+            transition: color 0.22s, transform 0.22s;
+            letter-spacing: 0.3px;
+            text-align: right;
+        }
+
+        .hero-nav-link:hover {
+            color: var(--text);
+            background: transparent;
+            transform: translateX(-4px);
+        }
+
+        .hero-nav-link.active {
+            color: var(--accent);
+            background: transparent;
+            font-weight: 700;
+        }
+
+        /* Hero Content */
+        .hero-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            padding: 60px 160px 60px 64px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-text {
+            max-width: 520px;
+            flex-shrink: 0;
+        }
+
+        /* Hero Image */
+        .hero-image-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: 0;
+        }
+
+        .hero-image-wrap img {
+            width: 120%;
+            max-height: 85vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(245,196,0,0.12);
+            border: 1px solid rgba(245,196,0,0.35);
+            color: #7a6200;
+            padding: 7px 18px;
+            border-radius: 24px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.4rem, 5vw, 4.2rem);
+            font-weight: 800;
+            line-height: 1.08;
+            color: var(--text);
+            margin-bottom: 28px;
+            letter-spacing: -2px;
+        }
+
+        .hero-content h1 .accent-line {
+            display: block;
+            color: var(--accent);
+        }
+
+        .hero-content .hero-sub {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 52px;
+            max-width: 520px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 38px;
+            background: var(--accent);
+            color: var(--text);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            font-family: var(--font);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.2px;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(245,196,0,0.35);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 34px;
+            background: transparent;
+            color: var(--text);
+            border: 2px solid rgba(0,0,0,0.15);
+            border-radius: 10px;
+            font-family: var(--font);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text);
+            background: rgba(0,0,0,0.04);
+            transform: translateY(-2px);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 64px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, var(--text-secondary));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* ============================================================
+           SECTIONS — COMMON
+        ============================================================ */
+        section:not(#hero) {
+            padding: 108px 64px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-header {
+            margin-bottom: 64px;
+        }
+
+        .section-header.centered {
+            text-align: center;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-bottom: 14px;
+        }
+
+        .section-tag::before {
+            content: '';
+            display: block;
+            width: 28px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .section-header.centered .section-tag::before {
+            display: none;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 18px;
+            letter-spacing: -1.5px;
+            line-height: 1.12;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            max-width: 580px;
+        }
+
+        .section-header.centered .section-subtitle {
+            margin: 0 auto;
+        }
+
+        /* Fade-in animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        .delay-4 { transition-delay: 0.4s; }
+        .delay-5 { transition-delay: 0.5s; }
+
+        /* Divider line */
+        .divider {
+            width: 64px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+            margin: 24px 0;
+        }
+
+        /* ============================================================
+           O NÁS
+        ============================================================ */
+        #o-nas {
+            background: var(--white);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 88px;
+            align-items: center;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            line-height: 1.82;
+            margin-bottom: 22px;
+            font-size: 15px;
+        }
+
+        .about-values {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
+        .value-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 18px 20px;
+            background: var(--bg);
+            border-radius: 14px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .value-item:hover {
+            border-color: rgba(245,196,0,0.4);
+            transform: translateX(6px);
+            box-shadow: var(--shadow);
+        }
+
+        .value-icon {
+            width: 46px;
+            height: 46px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .value-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .value-content h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .value-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .about-visual {
+            position: relative;
+        }
+
+        .about-visual img {
+            width: 100%;
+            height: 520px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .about-badge {
+            position: absolute;
+            bottom: -28px;
+            left: -28px;
+            background: var(--accent);
+            padding: 26px 28px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .about-badge .badge-number {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -2px;
+            line-height: 1;
+        }
+
+        .about-badge .badge-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(26,26,26,0.65);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 4px;
+        }
+
+        /* ============================================================
+           HUB — PROJEKT
+        ============================================================ */
+        #hub-projekt {
+            background: var(--bg);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--white);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-card-img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .project-card-body {
+            padding: 22px 24px 26px;
+        }
+
+        .project-card-tag {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .project-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.35;
+        }
+
+        .project-card-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        .projects-cta {
+            margin-top: 52px;
+            text-align: center;
+        }
+
+        /* ============================================================
+           PRÁCE
+        ============================================================ */
+        #prace {
+            background: var(--white);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 44px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 210px;
+            gap: 14px;
+        }
+
+        .gallery-item {
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-hover);
+            z-index: 2;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.45s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.07);
+        }
+
+        .gallery-item.wide {
+            grid-column: span 2;
+        }
+
+        .gallery-item.tall {
+            grid-row: span 2;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26,26,26,0.82) 0%, rgba(0,0,0,0) 55%);
+            opacity: 0;
+            transition: opacity 0.32s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 18px 20px;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay-text {
+            color: white;
+        }
+
+        .gallery-overlay-tag {
+            display: block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 3px;
+        }
+
+        .gallery-overlay-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           TECHNOLOGIE
+        ============================================================ */
+        #technologie {
+            background: var(--bg);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .tech-card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 36px 28px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1.5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.35s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-7px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(245,196,0,0.2);
+        }
+
+        .tech-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .tech-card.dark {
+            background: linear-gradient(145deg, #1A1A1A, #2a2a2a);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tech-card.dark::after {
+            background: var(--accent);
+        }
+
+        .tech-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(245,196,0,0.1);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        .tech-card.dark .tech-icon {
+            background: rgba(245,196,0,0.15);
+        }
+
+        .tech-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--accent);
+        }
+
+        .tech-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .tech-card.dark h3 {
+            color: white;
+        }
+
+        .tech-card p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.72;
+        }
+
+        .tech-card.dark p {
+            color: rgba(255,255,255,0.65);
+        }
+
+        /* ============================================================
+           KONTAKT
+        ============================================================ */
+        #kontakt {
+            background: var(--white);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 13px 16px;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: var(--font);
+            font-size: 14px;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.22s, background 0.22s;
+            resize: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            background: var(--white);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #AAAAAA;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+        }
+
+        #form-message {
+            display: none;
+            padding: 14px 18px;
+            background: rgba(0,180,80,0.08);
+            border: 1.5px solid rgba(0,180,80,0.25);
+            border-radius: 10px;
+            color: #006633;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .contact-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-block {
+            background: var(--bg);
+            border-radius: 18px;
+            padding: 30px;
+        }
+
+        .contact-block h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 22px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .contact-item-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .contact-item-body h4 {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 3px;
+        }
+
+        .contact-item-body p,
+        .contact-item-body a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            transition: color 0.2s;
+        }
+
+        .contact-item-body a:hover {
+            color: var(--accent);
+        }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        footer {
+            background: #111111;
+            padding: 44px 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+        }
+
+        .footer-logo span {
+            color: var(--accent);
+        }
+
+        footer p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.45);
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 1100px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .tech-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+            .about-visual {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section:not(#hero) {
+                padding: 80px 24px;
+                min-height: auto;
+            }
+
+            .hero-header {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .hero-content {
+                padding: 40px 24px 60px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 32px;
+            }
+
+            .hero-contact-info {
+                padding-right: 110px;
+            }
+
+            .hero-nav {
+                display: none;
+            }
+
+            .hero-image-wrap {
+                display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gallery-item.wide {
+                grid-column: span 1;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                padding: 32px 24px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .about-badge {
+                bottom: -16px;
+                left: -12px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery-item.tall {
+                grid-row: span 1;
+            }
+            .hero-content h1 {
+                font-size: 2.2rem;
+                letter-spacing: -1px;
+            }
+            .scroll-indicator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Language Switcher -->
+    <div id="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('cs')">CZ</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+
+    <!-- Slide-in Navigation (non-hero sections) -->
+    <nav id="slide-nav" role="navigation" aria-label="Hlavní navigace">
+        <div class="slide-nav-header">
+            <div class="slide-nav-logo">
+                <img src="Logo_TENA_EDM.png" alt="TENA EDM"
+                    onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                <div class="logo-text" style="display:none">TENA <span>EDM</span></div>
+            </div>
+        </div>
+        <ul>
+            <li><a href="#o-nas" class="nav-link" data-i18n="nav_about">O nás</a></li>
+            <li><a href="#hub-projekt" class="nav-link" data-i18n="nav_hub">HUB — Projekt</a></li>
+            <li><a href="#prace" class="nav-link" data-i18n="nav_work">Práce</a></li>
+            <li><a href="#technologie" class="nav-link" data-i18n="nav_tech">Technologie</a></li>
+            <li><a href="#kontakt" class="nav-link" data-i18n="nav_contact">Kontakt</a></li>
+        </ul>
+        <div class="slide-nav-contact">
+            <a href="mailto:info@tenadm.cz">info@tenadm.cz</a>
+            <a href="tel:+420603331601">+420 603 331 601</a>
+        </div>
+    </nav>
+
+    <!-- Nav Trigger (edge hover button) -->
+    <div id="nav-trigger" aria-label="Otevřít menu">
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- ====================================================
+         HERO
+    ==================================================== -->
+    <section id="hero">
+        <div class="hero-header">
+            <div class="hero-logo">
+                <img src="Logo_TENA_EDM.png" alt="TENA EDM logo"
+                    onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                <div class="logo-text" style="display:none">TENA <span>EDM</span></div>
+            </div>
+            <div class="hero-contact-info">
+                <a href="mailto:info@tenadm.cz">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    info@tenadm.cz
+                </a>
+                <a href="tel:+420603331601">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127 1.005.363 1.993.7 2.95a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.13-1.13a2 2 0 012.11-.45c.957.337 1.945.573 2.95.7a2 2 0 011.72 2z"/></svg>
+                    +420 603 331 601
+                </a>
+            </div>
+        </div>
+
+        <!-- Hero Navigation Tabs -->
+        <nav class="hero-nav" aria-label="Sekce webu">
+            <a href="#o-nas" class="hero-nav-link" data-i18n="nav_about">O nás</a>
+            <a href="#hub-projekt" class="hero-nav-link" data-i18n="nav_hub">HUB — Projekt</a>
+            <a href="#prace" class="hero-nav-link" data-i18n="nav_work">Práce</a>
+            <a href="#technologie" class="hero-nav-link" data-i18n="nav_tech">Technologie</a>
+            <a href="#kontakt" class="hero-nav-link" data-i18n="nav_contact">Kontakt</a>
+        </nav>
+
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge" data-i18n="hero_tag">Přesná výroba & EDM technologie</div>
+                <h1>
+                    <span data-i18n="hero_h1a">Přesné CNC obrábění</span>
+                    <span class="accent-line" data-i18n="hero_h1b">a EDM technologie</span>
+                </h1>
+                <p class="hero-sub" data-i18n="hero_sub">
+                    Zakázková výroba dílů s důrazem na přesnost a kvalitu. Specializujeme se na CNC obrábění a elektrojiskrové obrábění pro průmyslové zákazníky.
+                </p>
+                <div class="hero-actions">
+                    <a href="#kontakt" class="btn-primary" data-i18n="hero_cta">Nezávazná poptávka</a>
+                    <a href="#o-nas" class="btn-secondary" data-i18n="hero_cta2">Více o nás</a>
+                </div>
+            </div>
+
+            <div class="hero-image-wrap">
+                <img src="kresba.png" alt="Technický výkres dílu">
+            </div>
+        </div>
+
+        <div class="scroll-indicator" aria-hidden="true">scroll</div>
+    </section>
+
+    <!-- ====================================================
+         O NÁS
+    ==================================================== -->
+    <section id="o-nas">
+        <div class="section-container">
+            <div class="about-grid">
+                <!-- Text -->
+                <div class="about-text">
+                    <div class="section-header fade-in">
+                        <div class="section-tag" data-i18n="about_tag">O nás</div>
+                        <h2 class="section-title" data-i18n="about_title">Preciznost je naše řemeslo</h2>
+                        <div class="divider"></div>
+                    </div>
+
+                    <p class="fade-in delay-1" data-i18n="about_p1">
+                        Firma TENA EDM se specializuje na přesnou výrobu součástek metodami CNC obrábění a elektrojiskrového obrábění (EDM). Nabízíme zakázkovou výrobu pro průmyslové zákazníky s důrazem na přesnost, kvalitu a spolehlivost.
+                    </p>
+                    <p class="fade-in delay-2" data-i18n="about_p2">
+                        Naše moderně vybavená výrobna umožňuje zpracování i těch nejnáročnějších zakázek. Pracujeme s různými materiály včetně oceli, hliníku, titanu a speciálních slitin. Každý díl prochází přísnou kontrolou kvality.
+                    </p>
+
+                    <div class="about-values">
+                        <div class="value-item fade-in delay-2">
+                            <div class="value-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5"/>
+                                    <path d="M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <div class="value-content">
+                                <h4 data-i18n="val1_title">Přesnost</h4>
+                                <p data-i18n="val1_desc">Tolerance v řádu mikrometrů, EDM přesnost až 0,001 mm</p>
+                            </div>
+                        </div>
+
+                        <div class="value-item fade-in delay-3">
+                            <div class="value-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 12l2 2 4-4"/>
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                            </div>
+                            <div class="value-content">
+                                <h4 data-i18n="val2_title">Kvalita</h4>
+                                <p data-i18n="val2_desc">Přísná kontrola každého dílu, certifikace a dokumentace</p>
+                            </div>
+                        </div>
+
+                        <div class="value-item fade-in delay-4">
+                            <div class="value-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <div class="value-content">
+                                <h4 data-i18n="val3_title">Spolehlivost</h4>
+                                <p data-i18n="val3_desc">Termíny a dohodnuté parametry jsou pro nás závazné</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image -->
+                <div class="about-visual fade-in delay-2">
+                    <img src="https://picsum.photos/seed/cnc-center/800/600" alt="CNC obráběcí centrum TENA EDM">
+                    <div class="about-badge">
+                        <div class="badge-number">15+</div>
+                        <div class="badge-label" data-i18n="badge_years">let praxe</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         HUB — PROJEKT
+    ==================================================== -->
+    <section id="hub-projekt">
+        <div class="section-container">
+            <div class="section-header centered fade-in">
+                <div class="section-tag" data-i18n="hub_tag">Projekty</div>
+                <h2 class="section-title" data-i18n="hub_title">Naše projekty</h2>
+                <p class="section-subtitle" data-i18n="hub_sub">Ukázky realizovaných zakázek pro průmyslové zákazníky z různých odvětví</p>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card fade-in delay-1">
+                    <img src="https://picsum.photos/seed/proj-cnc-auto/800/420" alt="Přírubové díly" class="project-card-img">
+                    <div class="project-card-body">
+                        <div class="project-card-tag">CNC Frézování</div>
+                        <h3 class="project-card-title" data-i18n="p1_title">Přírubové díly pro automobilový průmysl</h3>
+                        <p class="project-card-desc" data-i18n="p1_desc">Série přesných přírubových dílů z hliníkové slitiny s tolerancí ±0,01 mm pro zákazníka z automotive sektoru.</p>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in delay-2">
+                    <img src="https://picsum.photos/seed/proj-edm-elec/800/420" alt="Elektrody pro formy" class="project-card-img">
+                    <div class="project-card-body">
+                        <div class="project-card-tag">EDM Hloubení</div>
+                        <h3 class="project-card-title" data-i18n="p2_title">Elektrody pro lisovací formy</h3>
+                        <p class="project-card-desc" data-i18n="p2_desc">Výroba grafitových a měděných elektrod pro hloubení forem na plasty. Komplexní tvary s vysokou přesností.</p>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in delay-3">
+                    <img src="https://picsum.photos/seed/proj-wire-cut/800/420" alt="Střižné nástroje" class="project-card-img">
+                    <div class="project-card-body">
+                        <div class="project-card-tag">EDM Drátové řezání</div>
+                        <h3 class="project-card-title" data-i18n="p3_title">Střižné nástroje a razníky</h3>
+                        <p class="project-card-desc" data-i18n="p3_desc">Přesné střižné nástroje z nástrojové oceli vyrobené drátovým řezáním s přesností 0,002 mm.</p>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in delay-1">
+                    <img src="https://picsum.photos/seed/proj-turn-hyd/800/420" alt="Rotační díly" class="project-card-img">
+                    <div class="project-card-body">
+                        <div class="project-card-tag">CNC Soustružení</div>
+                        <h3 class="project-card-title" data-i18n="p4_title">Rotační díly pro hydrauliku</h3>
+                        <p class="project-card-desc" data-i18n="p4_desc">Přesné rotační díly pro hydraulické systémy z nerezové oceli. Povrchová drsnost Ra 0,4 μm.</p>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in delay-2">
+                    <img src="https://picsum.photos/seed/proj-grind-rail/800/420" alt="Vodicí lišty" class="project-card-img">
+                    <div class="project-card-body">
+                        <div class="project-card-tag">Broušení</div>
+                        <h3 class="project-card-title" data-i18n="p5_title">Vedení a vodicí lišty</h3>
+                        <p class="project-card-desc" data-i18n="p5_desc">Kalené vodicí lišty broušené na požadovaný rozměr a rovinnost pro lineární vedení strojů.</p>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in delay-3">
+                    <img src="https://picsum.photos/seed/proj-aero-proto/800/420" alt="Letecké prototypy" class="project-card-img">
+                    <div class="project-card-body">
+                        <div class="project-card-tag">Komplex</div>
+                        <h3 class="project-card-title" data-i18n="p6_title">Prototypy pro letecký průmysl</h3>
+                        <p class="project-card-desc" data-i18n="p6_desc">Komplexní prototypové díly z titanové slitiny kombinující více technologií — frézování, soustružení a EDM.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="projects-cta fade-in">
+                <a href="#kontakt" class="btn-primary" data-i18n="hub_cta">Poptejte zakázku</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         PRÁCE
+    ==================================================== -->
+    <section id="prace">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <div class="section-tag" data-i18n="work_tag">Portfolio</div>
+                <h2 class="section-title" data-i18n="work_title">Ukázky práce</h2>
+                <p class="section-subtitle" data-i18n="work_sub">Výběr z naší produkce — přesné díly vyráběné moderními technologiemi</p>
+            </div>
+
+            <div class="filter-bar fade-in">
+                <button class="filter-btn active" data-filter="all" data-i18n="f_all">Vše</button>
+                <button class="filter-btn" data-filter="cnc" data-i18n="f_cnc">CNC</button>
+                <button class="filter-btn" data-filter="edm" data-i18n="f_edm">EDM</button>
+                <button class="filter-btn" data-filter="other" data-i18n="f_other">Jiné</button>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item wide fade-in" data-category="cnc">
+                    <img src="https://picsum.photos/seed/gal-cnc-mill/800/420" alt="Frézovaný blok">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag">CNC</span>
+                            <span class="gallery-overlay-name" data-i18n="g1">Frézovaný blok</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item fade-in delay-1" data-category="edm">
+                    <img src="https://picsum.photos/seed/gal-edm-sink/400/420" alt="EDM hloubení">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag">EDM</span>
+                            <span class="gallery-overlay-name" data-i18n="g2">Elektrojiskrový výbrus</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item tall fade-in delay-2" data-category="cnc">
+                    <img src="https://picsum.photos/seed/gal-turn-shaft/400/840" alt="Soustružený hřídel">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag">CNC</span>
+                            <span class="gallery-overlay-name" data-i18n="g3">Soustružený hřídel</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item fade-in delay-1" data-category="edm">
+                    <img src="https://picsum.photos/seed/gal-wire/400/420" alt="Drátové řezání">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag">EDM</span>
+                            <span class="gallery-overlay-name" data-i18n="g4">Drátové řezání</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item fade-in delay-2" data-category="other">
+                    <img src="https://picsum.photos/seed/gal-grind/400/420" alt="Broušení">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag" data-i18n="f_other">Jiné</span>
+                            <span class="gallery-overlay-name" data-i18n="g5">Broušená plocha</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item wide fade-in" data-category="cnc">
+                    <img src="https://picsum.photos/seed/gal-cnc-mold/800/420" alt="Frézovaná forma">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag">CNC</span>
+                            <span class="gallery-overlay-name" data-i18n="g6">Frézovaná forma</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item fade-in delay-1" data-category="edm">
+                    <img src="https://picsum.photos/seed/gal-edm-cav/400/420" alt="Hloubená dutina">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag">EDM</span>
+                            <span class="gallery-overlay-name" data-i18n="g7">Hloubená dutina</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gallery-item fade-in delay-2" data-category="other">
+                    <img src="https://picsum.photos/seed/gal-quality/400/420" alt="Kontrola kvality">
+                    <div class="gallery-overlay">
+                        <div class="gallery-overlay-text">
+                            <span class="gallery-overlay-tag" data-i18n="f_other">Jiné</span>
+                            <span class="gallery-overlay-name" data-i18n="g8">Kontrola kvality</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         TECHNOLOGIE
+    ==================================================== -->
+    <section id="technologie">
+        <div class="section-container">
+            <div class="section-header centered fade-in">
+                <div class="section-tag" data-i18n="tech_tag">Vybavení</div>
+                <h2 class="section-title" data-i18n="tech_title">Naše technologie</h2>
+                <p class="section-subtitle" data-i18n="tech_sub">Moderní strojní park umožňující výrobu nejpřesnějších součástek</p>
+            </div>
+
+            <div class="tech-grid">
+                <div class="tech-card fade-in delay-1">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 9h18M9 21V9"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="t1_title">CNC Frézování</h3>
+                    <p data-i18n="t1_desc">3osé a 5osé CNC frézovací centra pro výrobu tvarově složitých součástí. Zpracování oceli, hliníku, plastů a dalších materiálů s vysokou přesností.</p>
+                </div>
+
+                <div class="tech-card fade-in delay-2">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <line x1="12" y1="2" x2="12" y2="5"/>
+                            <line x1="12" y1="19" x2="12" y2="22"/>
+                            <line x1="2" y1="12" x2="5" y2="12"/>
+                            <line x1="19" y1="12" x2="22" y2="12"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="t2_title">CNC Soustružení</h3>
+                    <p data-i18n="t2_desc">Přesné CNC soustruhy pro výrobu rotačních součástí. Soustružení s řízenou osou C pro frézovací operace. Průměry od 5 do 400 mm.</p>
+                </div>
+
+                <div class="tech-card fade-in delay-3">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="t3_title">EDM Hloubení</h3>
+                    <p data-i18n="t3_desc">Elektrojiskrové hloubení pro výrobu forem, zápustek a tvarových dutin. Dosažitelná přesnost ±0,005 mm, povrch Ra 0,2 μm.</p>
+                </div>
+
+                <div class="tech-card fade-in delay-1">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="t4_title">EDM Drátové řezání</h3>
+                    <p data-i18n="t4_desc">Drátové řezání pro výrobu střižníků, vložek forem a tvarových profilů. Přesnost ±0,002 mm, řez pod úhlem až ±30°.</p>
+                </div>
+
+                <div class="tech-card fade-in delay-2">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12h20"/>
+                            <path d="M6 8l-4 4 4 4"/>
+                            <path d="M18 8l4 4-4 4"/>
+                            <rect x="8" y="8" width="8" height="8" rx="1"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="t5_title">Broušení</h3>
+                    <p data-i18n="t5_desc">Rovinné a válcové broušení pro dosažení výsledné přesnosti a povrchové jakosti. Tolerance ±0,001 mm, povrch Ra 0,1 μm.</p>
+                </div>
+
+                <div class="tech-card dark fade-in delay-3">
+                    <div class="tech-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4"/>
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 data-i18n="t6_title">Kontrola kvality</h3>
+                    <p data-i18n="t6_desc">3D měřicí centrum CMM pro přesné měření vyrobených dílů. Kompletní dokumentace a protokoly měření ke každé zakázce.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         KONTAKT
+    ==================================================== -->
+    <section id="kontakt">
+        <div class="section-container">
+            <div class="section-header fade-in">
+                <div class="section-tag" data-i18n="ct_tag">Kontakt</div>
+                <h2 class="section-title" data-i18n="ct_title">Kontaktujte nás</h2>
+                <p class="section-subtitle" data-i18n="ct_sub">Máte zájem o spolupráci nebo nezávaznou poptávku? Napište nám.</p>
+            </div>
+
+            <div class="contact-grid">
+                <!-- Form -->
+                <form class="contact-form fade-in" onsubmit="handleSubmit(event)" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="f-name" data-i18n="f_name">Jméno a příjmení</label>
+                            <input type="text" id="f-name" name="name" required placeholder="Jan Novák">
+                        </div>
+                        <div class="form-group">
+                            <label for="f-company" data-i18n="f_company">Firma</label>
+                            <input type="text" id="f-company" name="company" placeholder="Firma s.r.o.">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="f-email" data-i18n="f_email">Email</label>
+                            <input type="email" id="f-email" name="email" required placeholder="vas@email.cz">
+                        </div>
+                        <div class="form-group">
+                            <label for="f-phone" data-i18n="f_phone">Telefon</label>
+                            <input type="tel" id="f-phone" name="phone" placeholder="+420 xxx xxx xxx">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="f-message" data-i18n="f_msg">Zpráva / Poptávka</label>
+                        <textarea id="f-message" name="message" required
+                            placeholder="Popište vaši zakázku, materiál, množství, tolerance..."></textarea>
+                    </div>
+                    <div id="form-message" data-i18n="f_success">Děkujeme! Vaše zpráva byla odeslána. Ozveme se vám co nejdříve.</div>
+                    <button type="submit" class="btn-primary" style="align-self:flex-start" data-i18n="f_submit">
+                        Odeslat poptávku
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+                </form>
+
+                <!-- Contact Info -->
+                <div class="contact-sidebar fade-in delay-2">
+                    <div class="contact-block">
+                        <h3 data-i18n="ct_info_title">Kontaktní informace</h3>
+
+                        <div class="contact-item">
+                            <div class="contact-item-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                            <div class="contact-item-body">
+                                <h4 data-i18n="ct_email_lbl">Email</h4>
+                                <a href="mailto:info@tenadm.cz">info@tenadm.cz</a>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127 1.005.363 1.993.7 2.95a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.13-1.13a2 2 0 012.11-.45c.957.337 1.945.573 2.95.7a2 2 0 011.72 2z"/>
+                                </svg>
+                            </div>
+                            <div class="contact-item-body">
+                                <h4 data-i18n="ct_phone_lbl">Telefon</h4>
+                                <a href="tel:+420603331601">+420 603 331 601</a>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                            </div>
+                            <div class="contact-item-body">
+                                <h4 data-i18n="ct_addr_lbl">Adresa</h4>
+                                <p data-i18n="ct_addr">[Adresa provozovny — doplňte]</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-item-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                            <div class="contact-item-body">
+                                <h4 data-i18n="ct_hours_lbl">Provozní doba</h4>
+                                <p data-i18n="ct_hours">Po–Pá: 7:00–16:00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         FOOTER
+    ==================================================== -->
+    <footer>
+        <div class="footer-logo">TENA <span>EDM</span></div>
+        <p data-i18n="footer_copy">© 2025 TENA EDM. Všechna práva vyhrazena.</p>
+        <div class="footer-links">
+            <a href="#hero" data-i18n="footer_home">Domů</a>
+            <a href="#o-nas" data-i18n="nav_about">O nás</a>
+            <a href="#kontakt" data-i18n="nav_contact">Kontakt</a>
+        </div>
+    </footer>
+
+    <!-- ====================================================
+         JAVASCRIPT
+    ==================================================== -->
+    <script>
+    'use strict';
+
+    /* ============================================================
+       TRANSLATIONS
+    ============================================================ */
+    const T = {
+        cs: {
+            nav_about: 'O nás',
+            nav_hub: 'HUB — Projekt',
+            nav_work: 'Práce',
+            nav_tech: 'Technologie',
+            nav_contact: 'Kontakt',
+            hero_tag: 'Přesná výroba & EDM technologie',
+            hero_h1a: 'Přesné CNC obrábění',
+            hero_h1b: 'a EDM technologie',
+            hero_sub: 'Zakázková výroba dílů s důrazem na přesnost a kvalitu. Specializujeme se na CNC obrábění a elektrojiskrové obrábění pro průmyslové zákazníky.',
+            hero_cta: 'Nezávazná poptávka',
+            hero_cta2: 'Více o nás',
+            stat_years: 'let zkušeností',
+            stat_projects: 'dokončených projektů',
+            stat_precision: 'přesnost EDM',
+            about_tag: 'O nás',
+            about_title: 'Preciznost je naše řemeslo',
+            about_p1: 'Firma TENA EDM se specializuje na přesnou výrobu součástek metodami CNC obrábění a elektrojiskrového obrábění (EDM). Nabízíme zakázkovou výrobu pro průmyslové zákazníky s důrazem na přesnost, kvalitu a spolehlivost.',
+            about_p2: 'Naše moderně vybavená výrobna umožňuje zpracování i těch nejnáročnějších zakázek. Pracujeme s různými materiály včetně oceli, hliníku, titanu a speciálních slitin. Každý díl prochází přísnou kontrolou kvality.',
+            val1_title: 'Přesnost',
+            val1_desc: 'Tolerance v řádu mikrometrů, EDM přesnost až 0,001 mm',
+            val2_title: 'Kvalita',
+            val2_desc: 'Přísná kontrola každého dílu, certifikace a dokumentace',
+            val3_title: 'Spolehlivost',
+            val3_desc: 'Termíny a dohodnuté parametry jsou pro nás závazné',
+            badge_years: 'let praxe',
+            hub_tag: 'Projekty',
+            hub_title: 'Naše projekty',
+            hub_sub: 'Ukázky realizovaných zakázek pro průmyslové zákazníky z různých odvětví',
+            p1_title: 'Přírubové díly pro automobilový průmysl',
+            p1_desc: 'Série přesných přírubových dílů z hliníkové slitiny s tolerancí ±0,01 mm pro zákazníka z automotive sektoru.',
+            p2_title: 'Elektrody pro lisovací formy',
+            p2_desc: 'Výroba grafitových a měděných elektrod pro hloubení forem na plasty. Komplexní tvary s vysokou přesností.',
+            p3_title: 'Střižné nástroje a razníky',
+            p3_desc: 'Přesné střižné nástroje z nástrojové oceli vyrobené drátovým řezáním s přesností 0,002 mm.',
+            p4_title: 'Rotační díly pro hydrauliku',
+            p4_desc: 'Přesné rotační díly pro hydraulické systémy z nerezové oceli. Povrchová drsnost Ra 0,4 μm.',
+            p5_title: 'Vedení a vodicí lišty',
+            p5_desc: 'Kalené vodicí lišty broušené na požadovaný rozměr a rovinnost pro lineární vedení strojů.',
+            p6_title: 'Prototypy pro letecký průmysl',
+            p6_desc: 'Komplexní prototypové díly z titanové slitiny kombinující více technologií — frézování, soustružení a EDM.',
+            hub_cta: 'Poptejte zakázku',
+            work_tag: 'Portfolio',
+            work_title: 'Ukázky práce',
+            work_sub: 'Výběr z naší produkce — přesné díly vyráběné moderními technologiemi',
+            f_all: 'Vše',
+            f_cnc: 'CNC',
+            f_edm: 'EDM',
+            f_other: 'Jiné',
+            g1: 'Frézovaný blok',
+            g2: 'Elektrojiskrový výbrus',
+            g3: 'Soustružený hřídel',
+            g4: 'Drátové řezání',
+            g5: 'Broušená plocha',
+            g6: 'Frézovaná forma',
+            g7: 'Hloubená dutina',
+            g8: 'Kontrola kvality',
+            tech_tag: 'Vybavení',
+            tech_title: 'Naše technologie',
+            tech_sub: 'Moderní strojní park umožňující výrobu nejpřesnějších součástek',
+            t1_title: 'CNC Frézování',
+            t1_desc: '3osé a 5osé CNC frézovací centra pro výrobu tvarově složitých součástí. Zpracování oceli, hliníku, plastů a dalších materiálů s vysokou přesností.',
+            t2_title: 'CNC Soustružení',
+            t2_desc: 'Přesné CNC soustruhy pro výrobu rotačních součástí. Soustružení s řízenou osou C pro frézovací operace. Průměry od 5 do 400 mm.',
+            t3_title: 'EDM Hloubení',
+            t3_desc: 'Elektrojiskrové hloubení pro výrobu forem, zápustek a tvarových dutin. Dosažitelná přesnost ±0,005 mm, povrch Ra 0,2 μm.',
+            t4_title: 'EDM Drátové řezání',
+            t4_desc: 'Drátové řezání pro výrobu střižníků, vložek forem a tvarových profilů. Přesnost ±0,002 mm, řez pod úhlem až ±30°.',
+            t5_title: 'Broušení',
+            t5_desc: 'Rovinné a válcové broušení pro dosažení výsledné přesnosti a povrchové jakosti. Tolerance ±0,001 mm, povrch Ra 0,1 μm.',
+            t6_title: 'Kontrola kvality',
+            t6_desc: '3D měřicí centrum CMM pro přesné měření vyrobených dílů. Kompletní dokumentace a protokoly měření ke každé zakázce.',
+            ct_tag: 'Kontakt',
+            ct_title: 'Kontaktujte nás',
+            ct_sub: 'Máte zájem o spolupráci nebo nezávaznou poptávku? Napište nám.',
+            f_name: 'Jméno a příjmení',
+            f_company: 'Firma',
+            f_email: 'Email',
+            f_phone: 'Telefon',
+            f_msg: 'Zpráva / Poptávka',
+            f_submit: 'Odeslat poptávku',
+            f_success: 'Děkujeme! Vaše zpráva byla odeslána. Ozveme se vám co nejdříve.',
+            ct_info_title: 'Kontaktní informace',
+            ct_email_lbl: 'Email',
+            ct_phone_lbl: 'Telefon',
+            ct_addr_lbl: 'Adresa',
+            ct_addr: '[Adresa provozovny — doplňte]',
+            ct_hours_lbl: 'Provozní doba',
+            ct_hours: 'Po–Pá: 7:00–16:00',
+            footer_copy: '© 2025 TENA EDM. Všechna práva vyhrazena.',
+            footer_home: 'Domů',
+        },
+        en: {
+            nav_about: 'About Us',
+            nav_hub: 'HUB — Projects',
+            nav_work: 'Work',
+            nav_tech: 'Technologies',
+            nav_contact: 'Contact',
+            hero_tag: 'Precision Manufacturing & EDM Technologies',
+            hero_h1a: 'Precision CNC Machining',
+            hero_h1b: 'and EDM Technologies',
+            hero_sub: 'Custom parts manufacturing with focus on precision and quality. We specialize in CNC machining and electrical discharge machining for industrial customers.',
+            hero_cta: 'Request a Quote',
+            hero_cta2: 'About Us',
+            stat_years: 'years of experience',
+            stat_projects: 'completed projects',
+            stat_precision: 'EDM precision',
+            about_tag: 'About Us',
+            about_title: 'Precision is our craft',
+            about_p1: 'TENA EDM specializes in precision manufacturing of components using CNC machining and electrical discharge machining (EDM). We offer custom manufacturing for industrial customers with emphasis on precision, quality, and reliability.',
+            about_p2: 'Our modern production facility enables processing of even the most demanding orders. We work with various materials including steel, aluminum, titanium, and special alloys. Each part undergoes strict quality control.',
+            val1_title: 'Precision',
+            val1_desc: 'Tolerances in the micrometer range, EDM precision up to 0.001 mm',
+            val2_title: 'Quality',
+            val2_desc: 'Strict inspection of every part, certification and documentation',
+            val3_title: 'Reliability',
+            val3_desc: 'Deadlines and agreed parameters are binding for us',
+            badge_years: 'years of expertise',
+            hub_tag: 'Projects',
+            hub_title: 'Our Projects',
+            hub_sub: 'Examples of completed orders for industrial customers from various sectors',
+            p1_title: 'Flange Parts for Automotive Industry',
+            p1_desc: 'Series of precision flange parts from aluminum alloy with tolerance ±0.01 mm for an automotive sector customer.',
+            p2_title: 'Electrodes for Injection Molds',
+            p2_desc: 'Manufacturing of graphite and copper electrodes for sinking plastic molds. Complex shapes with high precision.',
+            p3_title: 'Punching Tools and Punches',
+            p3_desc: 'Precision punching tools from tool steel manufactured by wire cutting with precision 0.002 mm.',
+            p4_title: 'Rotary Parts for Hydraulics',
+            p4_desc: 'Precision rotary parts for hydraulic systems from stainless steel. Surface roughness Ra 0.4 μm.',
+            p5_title: 'Guides and Guide Rails',
+            p5_desc: 'Hardened guide rails ground to required dimensions and flatness for linear machine guides.',
+            p6_title: 'Prototypes for Aerospace',
+            p6_desc: 'Complex prototype parts from titanium alloy combining multiple technologies — milling, turning, and EDM.',
+            hub_cta: 'Request a Project',
+            work_tag: 'Portfolio',
+            work_title: 'Our Work',
+            work_sub: 'Selection from our production — precision parts manufactured using modern technologies',
+            f_all: 'All',
+            f_cnc: 'CNC',
+            f_edm: 'EDM',
+            f_other: 'Other',
+            g1: 'Milled Block',
+            g2: 'EDM Discharge',
+            g3: 'Turned Shaft',
+            g4: 'Wire Cutting',
+            g5: 'Ground Surface',
+            g6: 'Milled Mold',
+            g7: 'Sinked Cavity',
+            g8: 'Quality Control',
+            tech_tag: 'Equipment',
+            tech_title: 'Our Technologies',
+            tech_sub: 'Modern machine park enabling production of the most precise components',
+            t1_title: 'CNC Milling',
+            t1_desc: '3-axis and 5-axis CNC milling centers for manufacturing of complex-shaped parts. Processing of steel, aluminum, plastics and other materials with high precision.',
+            t2_title: 'CNC Turning',
+            t2_desc: 'Precision CNC lathes for manufacturing of rotational components. Turning with controlled C-axis for milling operations. Diameters from 5 to 400 mm.',
+            t3_title: 'EDM Sinking',
+            t3_desc: 'Electrical discharge machining sinking for manufacturing molds, dies and shaped cavities. Achievable precision ±0.005 mm, surface Ra 0.2 μm.',
+            t4_title: 'EDM Wire Cutting',
+            t4_desc: 'Wire cutting for manufacturing punches, mold inserts and shaped profiles. Precision ±0.002 mm, cut at angle up to ±30°.',
+            t5_title: 'Grinding',
+            t5_desc: 'Surface and cylindrical grinding for achieving final precision and surface quality. Tolerance ±0.001 mm, surface Ra 0.1 μm.',
+            t6_title: 'Quality Control',
+            t6_desc: '3D CMM measuring center for precise measurement of manufactured parts. Complete documentation and measurement protocols for every order.',
+            ct_tag: 'Contact',
+            ct_title: 'Contact Us',
+            ct_sub: 'Interested in cooperation or a non-binding inquiry? Write to us.',
+            f_name: 'Full Name',
+            f_company: 'Company',
+            f_email: 'Email',
+            f_phone: 'Phone',
+            f_msg: 'Message / Inquiry',
+            f_submit: 'Send Inquiry',
+            f_success: 'Thank you! Your message has been sent. We will get back to you as soon as possible.',
+            ct_info_title: 'Contact Information',
+            ct_email_lbl: 'Email',
+            ct_phone_lbl: 'Phone',
+            ct_addr_lbl: 'Address',
+            ct_addr: '[Company address — please fill in]',
+            ct_hours_lbl: 'Business Hours',
+            ct_hours: 'Mon–Fri: 7:00 AM–4:00 PM',
+            footer_copy: '© 2025 TENA EDM. All rights reserved.',
+            footer_home: 'Home',
+        }
+    };
+
+    let currentLang = 'cs';
+
+    function setLang(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang === 'cs' ? 'cs' : 'en';
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (T[lang][key] !== undefined) {
+                el.textContent = T[lang][key];
+            }
+        });
+
+        // Placeholder for textarea
+        const msgArea = document.getElementById('f-message');
+        if (msgArea) {
+            msgArea.placeholder = lang === 'cs'
+                ? 'Popište vaši zakázku, materiál, množství, tolerance...'
+                : 'Describe your order, material, quantity, tolerance...';
+        }
+
+        // Update submit button (has SVG child, so use firstChild.textContent)
+        const submitBtn = document.querySelector('.contact-form button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.childNodes[0].textContent = T[lang].f_submit + ' ';
+        }
+
+        // Active lang button
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active',
+                (btn.textContent === 'CZ' && lang === 'cs') ||
+                (btn.textContent === 'EN' && lang === 'en')
+            );
+        });
+    }
+
+    /* ============================================================
+       SLIDE-IN NAV LOGIC
+    ============================================================ */
+    const hero = document.getElementById('hero');
+    const slideNav = document.getElementById('slide-nav');
+    const navTrigger = document.getElementById('nav-trigger');
+    let navTimer;
+
+    // Show/hide trigger based on hero visibility
+    const heroIO = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                navTrigger.classList.remove('visible');
+                slideNav.classList.remove('open');
+            } else {
+                navTrigger.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.25 });
+
+    heroIO.observe(hero);
+
+    function openNav() {
+        clearTimeout(navTimer);
+        slideNav.classList.add('open');
+    }
+
+    function closeNav() {
+        navTimer = setTimeout(() => slideNav.classList.remove('open'), 260);
+    }
+
+    navTrigger.addEventListener('mouseenter', openNav);
+    navTrigger.addEventListener('mouseleave', closeNav);
+    slideNav.addEventListener('mouseenter', openNav);
+    slideNav.addEventListener('mouseleave', closeNav);
+
+    // Close on link click
+    slideNav.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => slideNav.classList.remove('open'));
+    });
+
+    /* ============================================================
+       ACTIVE NAV HIGHLIGHT
+    ============================================================ */
+    const sectionIO = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.id;
+                document.querySelectorAll('.nav-link, .hero-nav-link').forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                });
+            }
+        });
+    }, { threshold: 0.45 });
+
+    document.querySelectorAll('section').forEach(s => sectionIO.observe(s));
+
+    /* ============================================================
+       FADE-IN ON SCROLL
+    ============================================================ */
+    const fadeIO = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                fadeIO.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => fadeIO.observe(el));
+
+    /* ============================================================
+       GALLERY FILTER
+    ============================================================ */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.getAttribute('data-filter');
+
+            galleryItems.forEach(item => {
+                const match = filter === 'all' || item.getAttribute('data-category') === filter;
+                if (match) {
+                    item.style.display = '';
+                    requestAnimationFrame(() => {
+                        item.style.opacity = '0';
+                        requestAnimationFrame(() => {
+                            item.style.transition = 'opacity 0.4s ease';
+                            item.style.opacity = '1';
+                        });
+                    });
+                } else {
+                    item.style.transition = 'opacity 0.3s ease';
+                    item.style.opacity = '0';
+                    setTimeout(() => { item.style.display = 'none'; }, 300);
+                }
+            });
+        });
+    });
+
+    /* ============================================================
+       CONTACT FORM
+    ============================================================ */
+    function handleSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const msgEl = document.getElementById('form-message');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.childNodes[0].textContent;
+
+        submitBtn.disabled = true;
+        submitBtn.childNodes[0].textContent = '... ';
+
+        setTimeout(() => {
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.childNodes[0].textContent = originalText;
+            msgEl.textContent = T[currentLang].f_success;
+            msgEl.style.display = 'block';
+            setTimeout(() => { msgEl.style.display = 'none'; }, 6000);
+        }, 900);
+    }
+    </script>
+</body>
+</html>
