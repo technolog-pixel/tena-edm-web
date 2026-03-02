@@ -100,15 +100,15 @@
         ============================================================ */
         #slide-nav {
             position: fixed;
-            left: 0;
+            right: 0;
             top: 0;
             height: 100%;
             width: 270px;
-            background: var(--white);
+            background: linear-gradient(to left, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.7) 60%, rgba(255,255,255,0) 100%);
             z-index: 950;
-            transform: translateX(-100%);
+            transform: translateX(100%);
             transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 6px 0 40px rgba(0,0,0,0.13);
+            box-shadow: none;
             display: flex;
             flex-direction: column;
         }
@@ -144,6 +144,11 @@
             padding: 24px 0;
             flex: 1;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%;
+            padding-top: 45%;
         }
 
         #slide-nav ul li a {
@@ -157,6 +162,26 @@
             transition: var(--transition);
             border-left: 3px solid transparent;
             letter-spacing: 0.2px;
+            position: relative;
+        }
+
+        #slide-nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 32px;
+            right: 32px;
+            height: 2px;
+            background: #F5C400;
+            transform: scaleX(0);
+            transform-origin: right center;
+            transition: transform 0.3s ease;
+        }
+
+        #slide-nav ul li a:hover::after,
+        #slide-nav ul li a.active::after {
+            transform: scaleX(1);
+            transform-origin: left center;
         }
 
         #slide-nav ul li a:hover,
@@ -186,21 +211,31 @@
         }
 
         /* Nav Trigger */
+        #edge-trigger {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 40px;
+            height: 100vh;
+            z-index: 945;
+            pointer-events: none;
+        }
+
         #nav-trigger {
             position: fixed;
-            left: 0;
+            right: 0;
             top: 50%;
             transform: translateY(-50%);
             z-index: 940;
-            width: 44px;
-            height: 88px;
+            width: 22px;
+            height: 44px;
             background: var(--white);
-            border-radius: 0 12px 12px 0;
+            border-radius: 6px 0 0 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease, transform 0.3s ease;
@@ -218,16 +253,16 @@
         .hamburger {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 3px;
             align-items: center;
         }
 
         .hamburger span {
             display: block;
-            width: 18px;
-            height: 2px;
+            width: 10px;
+            height: 1px;
             background: var(--text);
-            border-radius: 2px;
+            border-radius: 1px;
             transition: var(--transition);
         }
 
@@ -279,8 +314,14 @@
             z-index: 10;
         }
 
+        .hero-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         .hero-logo img {
-            height: 50px;
+            height: 90px;
             width: auto;
         }
 
@@ -300,53 +341,83 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 5px;
+            gap: 0;
             padding-right: 140px; /* space for lang switcher */
         }
 
         .hero-contact-info a {
             color: var(--text-secondary);
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 18px;
+            font-weight: 600;
             transition: color 0.2s;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            padding: 8px 0;
         }
 
         .hero-contact-info a:hover {
             color: var(--accent);
         }
 
+        .hero-contact-info .contact-divider {
+            width: 100%;
+            height: 3px;
+            background: #F5C400;
+            border: none;
+            margin: 0;
+        }
+
         /* Hero Nav Tabs — vertikální, pravá strana, průhledné pozadí */
         .hero-nav {
             position: absolute;
             right: 40px;
-            top: 50%;
+            top: 40%;
             transform: translateY(-50%);
-            z-index: 10;
+            z-index: 50;
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 6px;
+            gap: 14px;
         }
 
         .hero-nav-link {
-            padding: 7px 0;
+            display: block;
+            padding: 10px 0;
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 20px;
             font-weight: 500;
             background: transparent;
             border-radius: 0;
-            transition: color 0.22s, transform 0.22s;
+            transition: color 0.22s;
             letter-spacing: 0.3px;
             text-align: right;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .hero-nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #F5C400;
+            transform: scaleX(0);
+            transform-origin: right center;
+            transition: transform 0.3s ease;
+        }
+
+        .hero-nav-link:hover::after,
+        .hero-nav-link.active::after {
+            transform: scaleX(1);
+            transform-origin: left center;
         }
 
         .hero-nav-link:hover {
             color: var(--text);
             background: transparent;
-            transform: translateX(-4px);
         }
 
         .hero-nav-link.active {
@@ -378,38 +449,27 @@
             align-items: center;
             justify-content: flex-end;
             min-width: 0;
+            margin-left: -60px;
+        }
+
+        @keyframes vybarveni {
+            0%   { filter: grayscale(100%) brightness(1.1); opacity: 0; }
+            100% { filter: grayscale(0%)   brightness(1);   opacity: 0.65; }
         }
 
         .hero-image-wrap img {
-            width: 120%;
-            max-height: 85vh;
+            width: 210%;
+            max-height: 100vh;
             object-fit: contain;
             display: block;
+            animation: vybarveni 5s ease 0.5s both;
+            pointer-events: none;
         }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(245,196,0,0.12);
-            border: 1px solid rgba(245,196,0,0.35);
-            color: #7a6200;
-            padding: 7px 18px;
-            border-radius: 24px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 32px;
+        .hero-image-wrap {
+            pointer-events: none;
         }
 
-        .hero-badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-        }
 
         .hero-content h1 {
             font-size: clamp(2.4rem, 5vw, 4.2rem);
@@ -426,11 +486,16 @@
         }
 
         .hero-content .hero-sub {
-            font-size: 1.05rem;
+            font-size: 18px;
             color: var(--text-secondary);
-            line-height: 1.75;
-            margin-bottom: 52px;
+            line-height: 1.4;
+            margin-bottom: 6px;
             max-width: 520px;
+            white-space: nowrap;
+        }
+
+        .hero-content .hero-sub:last-of-type {
+            margin-bottom: 52px;
         }
 
         .hero-actions {
@@ -547,10 +612,10 @@
             align-items: center;
             gap: 10px;
             color: var(--accent);
-            font-size: 11px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: 0;
             margin-bottom: 14px;
         }
 
@@ -621,7 +686,7 @@
             background: var(--white);
         }
 
-        .about-grid {
+.about-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 88px;
@@ -727,6 +792,79 @@
             text-transform: uppercase;
             letter-spacing: 0.8px;
             margin-top: 4px;
+        }
+
+        /* ============================================================
+           CERTIFIKACE
+        ============================================================ */
+        #certifikace {
+            background: var(--bg);
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .cert-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 40px 32px 36px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: box-shadow 0.25s, transform 0.25s;
+        }
+
+        .cert-card:hover {
+            box-shadow: 0 8px 40px rgba(0,0,0,0.13);
+            transform: translateY(-4px);
+        }
+
+        .cert-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #F5C400;
+        }
+
+        .cert-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(245,196,0,0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .cert-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: #F5C400;
+        }
+
+        .cert-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .cert-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.5;
         }
 
         /* ============================================================
@@ -1235,19 +1373,33 @@
             }
 
             .hero-header {
-                padding-left: 24px;
-                padding-right: 24px;
+                padding: 20px 24px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
             }
 
-            .hero-content {
-                padding: 40px 24px 60px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 32px;
+            .hero-logo img {
+                display: block;
             }
 
             .hero-contact-info {
-                padding-right: 110px;
+                display: none;
+            }
+
+            .hero-content {
+                padding-top: 16px;
+                padding-bottom: 60px;
+                padding-left: 24px;
+                padding-right: 24px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .hero-content h1 {
+                margin-top: 0;
             }
 
             .hero-nav {
@@ -1318,14 +1470,15 @@
     <!-- Slide-in Navigation (non-hero sections) -->
     <nav id="slide-nav" role="navigation" aria-label="Hlavní navigace">
         <div class="slide-nav-header">
-            <div class="slide-nav-logo">
+            <a href="#hero" class="slide-nav-logo" style="cursor:pointer;display:block;">
                 <img src="Logo_TENA_EDM.png" alt="TENA EDM"
                     onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
                 <div class="logo-text" style="display:none">TENA <span>EDM</span></div>
-            </div>
+            </a>
         </div>
         <ul>
             <li><a href="#o-nas" class="nav-link" data-i18n="nav_about">O nás</a></li>
+            <li><a href="#certifikace" class="nav-link" data-i18n="nav_cert">Certifikace</a></li>
             <li><a href="#hub-projekt" class="nav-link" data-i18n="nav_hub">HUB — Projekt</a></li>
             <li><a href="#prace" class="nav-link" data-i18n="nav_work">Práce</a></li>
             <li><a href="#technologie" class="nav-link" data-i18n="nav_tech">Technologie</a></li>
@@ -1336,6 +1489,9 @@
             <a href="tel:+420603331601">+420 603 331 601</a>
         </div>
     </nav>
+
+    <!-- Invisible edge trigger zone -->
+    <div id="edge-trigger"></div>
 
     <!-- Nav Trigger (edge hover button) -->
     <div id="nav-trigger" aria-label="Otevřít menu">
@@ -1358,11 +1514,12 @@
             </div>
             <div class="hero-contact-info">
                 <a href="mailto:info@tenadm.cz">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     info@tenadm.cz
                 </a>
+                <hr class="contact-divider">
                 <a href="tel:+420603331601">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127 1.005.363 1.993.7 2.95a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.13-1.13a2 2 0 012.11-.45c.957.337 1.945.573 2.95.7a2 2 0 011.72 2z"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127 1.005.363 1.993.7 2.95a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.13-1.13a2 2 0 012.11-.45c.957.337 1.945.573 2.95.7a2 2 0 011.72 2z"/></svg>
                     +420 603 331 601
                 </a>
             </div>
@@ -1371,6 +1528,7 @@
         <!-- Hero Navigation Tabs -->
         <nav class="hero-nav" aria-label="Sekce webu">
             <a href="#o-nas" class="hero-nav-link" data-i18n="nav_about">O nás</a>
+            <a href="#certifikace" class="hero-nav-link" data-i18n="nav_cert">Certifikace</a>
             <a href="#hub-projekt" class="hero-nav-link" data-i18n="nav_hub">HUB — Projekt</a>
             <a href="#prace" class="hero-nav-link" data-i18n="nav_work">Práce</a>
             <a href="#technologie" class="hero-nav-link" data-i18n="nav_tech">Technologie</a>
@@ -1379,14 +1537,12 @@
 
         <div class="hero-content">
             <div class="hero-text">
-                <div class="hero-badge" data-i18n="hero_tag">Přesná výroba & EDM technologie</div>
-                <h1>
-                    <span data-i18n="hero_h1a">Přesné CNC obrábění</span>
-                    <span class="accent-line" data-i18n="hero_h1b">a EDM technologie</span>
+<h1>
+                    <span data-i18n="hero_h1a">CNC obrábění</span>
+                    <span class="accent-line" data-i18n="hero_h1b">přesných dílů</span>
                 </h1>
-                <p class="hero-sub" data-i18n="hero_sub">
-                    Zakázková výroba dílů s důrazem na přesnost a kvalitu. Specializujeme se na CNC obrábění a elektrojiskrové obrábění pro průmyslové zákazníky.
-                </p>
+                <p class="hero-sub" data-i18n="hero_sub">Od návrhu až po dodání – kompletní služby v oblasti strojírenství</p>
+                <p class="hero-sub" data-i18n="hero_sub2">Sériová i kusová výroba dílů s důrazem na přesnost a kvalitu</p>
                 <div class="hero-actions">
                     <a href="#kontakt" class="btn-primary" data-i18n="hero_cta">Nezávazná poptávka</a>
                     <a href="#o-nas" class="btn-secondary" data-i18n="hero_cta2">Více o nás</a>
@@ -1410,16 +1566,23 @@
                 <!-- Text -->
                 <div class="about-text">
                     <div class="section-header fade-in">
-                        <div class="section-tag" data-i18n="about_tag">O nás</div>
+                        <div class="section-tag" data-i18n="about_tag">O Nás</div>
                         <h2 class="section-title" data-i18n="about_title">Preciznost je naše řemeslo</h2>
+                        <p class="section-subtitle fade-in" data-i18n="about_subtitle">Strojírenská výroba, která drží krok s inovacemi</p>
                         <div class="divider"></div>
                     </div>
 
                     <p class="fade-in delay-1" data-i18n="about_p1">
-                        Firma TENA EDM se specializuje na přesnou výrobu součástek metodami CNC obrábění a elektrojiskrového obrábění (EDM). Nabízíme zakázkovou výrobu pro průmyslové zákazníky s důrazem na přesnost, kvalitu a spolehlivost.
+                        Jsme výrobně-obchodní firma zaměřená na precizní strojírenskou výrobu a dodávky dílů do širokého spektra průmyslových odvětví. Dlouhodobě spolupracujeme se zákazníky ze segmentů jako zdravotnictví, letectví, automotive, robotika a dalších oblastí, kde rozhodují kvalita, přesnost a spolehlivost.
                     </p>
                     <p class="fade-in delay-2" data-i18n="about_p2">
-                        Naše moderně vybavená výrobna umožňuje zpracování i těch nejnáročnějších zakázek. Pracujeme s různými materiály včetně oceli, hliníku, titanu a speciálních slitin. Každý díl prochází přísnou kontrolou kvality.
+                        Důraz na řízení kvality, bezpečnost a odpovědný přístup potvrzují naše certifikace dle norem ISO 9001, ISO 14001 a ISO 45001.
+                    </p>
+                    <p class="fade-in delay-2" data-i18n="about_p3">
+                        Aktuálně rozjíždíme nový projekt HUB – platformu, která propojuje naše know-how, moderní výrobu a obchodní zkušenosti do ještě efektivnější spolupráce jak se zákazníky tak s výrobními partnery. Díky flexibilitě, technickému zázemí a důrazu na detail dokážeme pružně reagovat na požadavky od kusové až po sériovou výrobu.
+                    </p>
+                    <p class="fade-in delay-3" data-i18n="about_p4">
+                        HUB je další krok vpřed – směrem k rychlejším dodávkám, lepší komunikaci a stabilnímu partnerství.
                     </p>
 
                     <div class="about-values">
@@ -1471,6 +1634,53 @@
                         <div class="badge-number">15+</div>
                         <div class="badge-label" data-i18n="badge_years">let praxe</div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================
+         CERTIFIKACE
+    ==================================================== -->
+    <section id="certifikace">
+        <div class="section-container">
+            <div class="section-header centered fade-in">
+                <div class="section-tag" data-i18n="cert_tag">Certifikace</div>
+                <div class="divider"></div>
+            </div>
+            <div class="cert-grid">
+                <div class="cert-card fade-in">
+                    <div class="cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <div class="cert-accent"></div>
+                    <h3 class="cert-name">ISO 9001</h3>
+                    <p class="cert-desc" data-i18n="cert_iso9001">Systém managementu kvality</p>
+                </div>
+                <div class="cert-card fade-in delay-1">
+                    <div class="cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4l3 3"/>
+                            <path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 16.24a6 6 0 0 1 0-8.49"/>
+                        </svg>
+                    </div>
+                    <div class="cert-accent"></div>
+                    <h3 class="cert-name">ISO 14001</h3>
+                    <p class="cert-desc" data-i18n="cert_iso14001">Systém environmentálního managementu</p>
+                </div>
+                <div class="cert-card fade-in delay-2">
+                    <div class="cert-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div class="cert-accent"></div>
+                    <h3 class="cert-name">ISO 45001</h3>
+                    <p class="cert-desc" data-i18n="cert_iso45001">Systém managementu bezpečnosti a ochrany zdraví při práci</p>
                 </div>
             </div>
         </div>
@@ -1871,23 +2081,31 @@
     const T = {
         cs: {
             nav_about: 'O nás',
+            nav_cert: 'Certifikace',
             nav_hub: 'HUB — Projekt',
             nav_work: 'Práce',
             nav_tech: 'Technologie',
             nav_contact: 'Kontakt',
-            hero_tag: 'Přesná výroba & EDM technologie',
-            hero_h1a: 'Přesné CNC obrábění',
-            hero_h1b: 'a EDM technologie',
-            hero_sub: 'Zakázková výroba dílů s důrazem na přesnost a kvalitu. Specializujeme se na CNC obrábění a elektrojiskrové obrábění pro průmyslové zákazníky.',
+            hero_h1a: 'CNC obrábění',
+            hero_h1b: 'přesných dílů',
+            hero_sub: 'Od návrhu až po dodání – kompletní služby v oblasti strojírenství',
+            hero_sub2: 'Sériová i kusová výroba dílů s důrazem na přesnost a kvalitu',
             hero_cta: 'Nezávazná poptávka',
             hero_cta2: 'Více o nás',
             stat_years: 'let zkušeností',
             stat_projects: 'dokončených projektů',
             stat_precision: 'přesnost EDM',
-            about_tag: 'O nás',
+            about_tag: 'O Nás',
             about_title: 'Preciznost je naše řemeslo',
-            about_p1: 'Firma TENA EDM se specializuje na přesnou výrobu součástek metodami CNC obrábění a elektrojiskrového obrábění (EDM). Nabízíme zakázkovou výrobu pro průmyslové zákazníky s důrazem na přesnost, kvalitu a spolehlivost.',
-            about_p2: 'Naše moderně vybavená výrobna umožňuje zpracování i těch nejnáročnějších zakázek. Pracujeme s různými materiály včetně oceli, hliníku, titanu a speciálních slitin. Každý díl prochází přísnou kontrolou kvality.',
+            about_subtitle: 'Strojírenská výroba, která drží krok s inovacemi',
+            about_p1: 'Jsme výrobně-obchodní firma zaměřená na precizní strojírenskou výrobu a dodávky dílů do širokého spektra průmyslových odvětví. Dlouhodobě spolupracujeme se zákazníky ze segmentů jako zdravotnictví, letectví, automotive, robotika a dalších oblastí, kde rozhodují kvalita, přesnost a spolehlivost.',
+            about_p2: 'Důraz na řízení kvality, bezpečnost a odpovědný přístup potvrzují naše certifikace dle norem ISO 9001, ISO 14001 a ISO 45001.',
+            about_p3: 'Aktuálně rozjíždíme nový projekt HUB – platformu, která propojuje naše know-how, moderní výrobu a obchodní zkušenosti do ještě efektivnější spolupráce jak se zákazníky tak s výrobními partnery. Díky flexibilitě, technickému zázemí a důrazu na detail dokážeme pružně reagovat na požadavky od kusové až po sériovou výrobu.',
+            about_p4: 'HUB je další krok vpřed – směrem k rychlejším dodávkám, lepší komunikaci a stabilnímu partnerství.',
+            cert_tag: 'Certifikace',
+            cert_iso9001: 'Systém managementu kvality',
+            cert_iso14001: 'Systém environmentálního managementu',
+            cert_iso45001: 'Systém managementu bezpečnosti a ochrany zdraví při práci',
             val1_title: 'Přesnost',
             val1_desc: 'Tolerance v řádu mikrometrů, EDM přesnost až 0,001 mm',
             val2_title: 'Kvalita',
@@ -1963,14 +2181,15 @@
         },
         en: {
             nav_about: 'About Us',
+            nav_cert: 'Certifications',
             nav_hub: 'HUB — Projects',
             nav_work: 'Work',
             nav_tech: 'Technologies',
             nav_contact: 'Contact',
-            hero_tag: 'Precision Manufacturing & EDM Technologies',
-            hero_h1a: 'Precision CNC Machining',
-            hero_h1b: 'and EDM Technologies',
-            hero_sub: 'Custom parts manufacturing with focus on precision and quality. We specialize in CNC machining and electrical discharge machining for industrial customers.',
+            hero_h1a: 'CNC Machining of',
+            hero_h1b: 'Precision Parts',
+            hero_sub: 'From design to delivery – complete engineering services',
+            hero_sub2: 'Series and custom part manufacturing with focus on precision and quality',
             hero_cta: 'Request a Quote',
             hero_cta2: 'About Us',
             stat_years: 'years of experience',
@@ -1978,8 +2197,15 @@
             stat_precision: 'EDM precision',
             about_tag: 'About Us',
             about_title: 'Precision is our craft',
-            about_p1: 'TENA EDM specializes in precision manufacturing of components using CNC machining and electrical discharge machining (EDM). We offer custom manufacturing for industrial customers with emphasis on precision, quality, and reliability.',
-            about_p2: 'Our modern production facility enables processing of even the most demanding orders. We work with various materials including steel, aluminum, titanium, and special alloys. Each part undergoes strict quality control.',
+            about_subtitle: 'Engineering production that keeps pace with innovation',
+            about_p1: 'We are a manufacturing and trading company focused on precision engineering production and component supply across a wide range of industrial sectors. We have long-term partnerships with customers in healthcare, aerospace, automotive, robotics, and other fields where quality, precision, and reliability are decisive.',
+            about_p2: 'Our commitment to quality management, safety, and responsible practices is confirmed by our certifications under ISO 9001, ISO 14001, and ISO 45001.',
+            about_p3: 'We are currently launching a new project, HUB – a platform that connects our know-how, modern manufacturing, and business experience into even more effective collaboration with both customers and manufacturing partners. Thanks to our flexibility, technical background, and attention to detail, we can respond promptly to requirements ranging from one-off to series production.',
+            about_p4: 'HUB is the next step forward – towards faster deliveries, better communication, and a stable partnership.',
+            cert_tag: 'Certifications',
+            cert_iso9001: 'Quality Management System',
+            cert_iso14001: 'Environmental Management System',
+            cert_iso45001: 'Occupational Health and Safety Management System',
             val1_title: 'Precision',
             val1_desc: 'Tolerances in the micrometer range, EDM precision up to 0.001 mm',
             val2_title: 'Quality',
@@ -2097,6 +2323,7 @@
     const hero = document.getElementById('hero');
     const slideNav = document.getElementById('slide-nav');
     const navTrigger = document.getElementById('nav-trigger');
+    const edgeTrigger = document.getElementById('edge-trigger');
     let navTimer;
 
     // Show/hide trigger based on hero visibility
@@ -2104,9 +2331,11 @@
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 navTrigger.classList.remove('visible');
+                edgeTrigger.style.pointerEvents = 'none';
                 slideNav.classList.remove('open');
             } else {
                 navTrigger.classList.add('visible');
+                edgeTrigger.style.pointerEvents = 'all';
             }
         });
     }, { threshold: 0.25 });
@@ -2122,6 +2351,8 @@
         navTimer = setTimeout(() => slideNav.classList.remove('open'), 260);
     }
 
+    edgeTrigger.addEventListener('mouseenter', openNav);
+    edgeTrigger.addEventListener('mouseleave', closeNav);
     navTrigger.addEventListener('mouseenter', openNav);
     navTrigger.addEventListener('mouseleave', closeNav);
     slideNav.addEventListener('mouseenter', openNav);
