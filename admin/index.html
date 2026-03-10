@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — TENA EDM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: #EFEFEF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 48px 40px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+            width: 100%;
+            max-width: 380px;
+        }
+        .logo { text-align: center; margin-bottom: 32px; }
+        .logo img { height: 48px; width: auto; }
+        .logo-text { font-size: 24px; font-weight: 800; letter-spacing: -1px; color: #1A1A1A; }
+        .logo-text span { color: #F5C400; }
+        h1 { font-size: 18px; font-weight: 700; text-align: center; color: #1A1A1A; margin-bottom: 6px; }
+        .sub { font-size: 13px; color: #666; text-align: center; margin-bottom: 28px; }
+        .error {
+            background: #fff3f3;
+            border: 1.5px solid #ffbcbc;
+            color: #c00;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .field { margin-bottom: 16px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #1A1A1A; margin-bottom: 6px; }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid rgba(0,0,0,0.12);
+            border-radius: 8px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 15px;
+            color: #1A1A1A;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus { border-color: #F5C400; }
+        button[type="submit"] {
+            width: 100%;
+            margin-top: 8px;
+            padding: 13px;
+            background: #F5C400;
+            color: #1A1A1A;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover { background: #e0b200; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="logo">
+        <img src="../Logo_TENA_EDM.png" alt="TENA EDM logo"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="logo-text" style="display:none">TENA <span>EDM</span></div>
+    </div>
+    <h1>Admin přihlášení</h1>
+    <p class="sub">Správa sekce Technologie</p>
+
+    <div class="error" id="error-msg">Nesprávné jméno nebo heslo.</div>
+
+    <form method="POST" action="login.php">
+        <div class="field">
+            <label for="username">Uživatelské jméno</label>
+            <input type="text" id="username" name="username" autofocus autocomplete="username">
+        </div>
+        <div class="field">
+            <label for="pw">Heslo</label>
+            <input type="password" id="pw" name="password" autocomplete="current-password">
+        </div>
+        <button type="submit">Přihlásit se</button>
+    </form>
+</div>
+<script>
+    if (new URLSearchParams(location.search).has('error')) {
+        document.getElementById('error-msg').style.display = 'block';
+    }
+</script>
+</body>
+</html>

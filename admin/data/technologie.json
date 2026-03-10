@@ -1,0 +1,28 @@
+{
+    "lastUpdated": "2026-03-09",
+    "cs": {
+        "t1_title": "CNC 3osé obrábění",
+        "t1_desc": "Frézování na 3osých CNC centrech s vysokou přesností.<ul><li>Pracovní plocha: 2&nbsp;400 × 850 mm</li><li>Max. hmotnost obrobku: 3&nbsp;500 kg</li></ul>",
+        "t2_title": "CNC 5osé obrábění",
+        "t2_desc": "Komplexní obrábění složitých tvarů v jednom upnutí.<ul><li>Pracovní plocha: 650 × 500 mm</li><li>Max. hmotnost obrobku: 2&nbsp;000 kg</li></ul>",
+        "t3_title": "CNC soustružení",
+        "t3_desc": "Přesné soustružení rotačních dílů, kusová i sériová výroba.<ul><li>Max. průměr nad ložem: 330 mm</li><li>Max. průměr nad suportem: 260 mm</li><li>Max. délka soustružení (Z): 450 mm</li></ul>",
+        "t4_title": "Další technologie",
+        "t4_desc": "Nabízíme široké spektrum dalších technologií:<ul><li>Drátové řezání</li><li>Broušení</li><li>Hloubení</li><li>Laserové řezání</li></ul>",
+        "t5_title": "Kontrola kvality",
+        "t5_desc": "Měření a kontrola dílů pomocí moderních měřicích přístrojů. Zajištění shody s výkresovou dokumentací.<ul><li>Max. rozměr: 900 × 1&nbsp;000 × 600 mm</li><li>Rozlišení: 0,0001 mm (0,1 μm)</li><li>Max. hmotnost obrobku: 1&nbsp;200 kg</li></ul>"
+    },
+    "en": {
+        "t1_title": "CNC 3-Axis Machining",
+        "t1_desc": "Milling on 3-axis CNC machining centers with high precision.<ul><li>Working area: 2,400 × 850 mm</li><li>Max. workpiece weight: 3,500 kg</li></ul>",
+        "t2_title": "CNC 5-Axis Machining",
+        "t2_desc": "Complex machining of intricate shapes in a single setup.<ul><li>Working area: 650 × 500 mm</li><li>Max. workpiece weight: 2,000 kg</li></ul>",
+        "t3_title": "CNC Turning",
+        "t3_desc": "Precision turning of rotational parts, single-piece and series production.<ul><li>Max. diameter over bed: 330 mm</li><li>Max. diameter over cross slide: 260 mm</li><li>Max. turning length (Z): 450 mm</li></ul>",
+        "t4_title": "Other Technologies",
+        "t4_desc": "We offer a wide range of additional technologies:<ul><li>Wire EDM</li><li>Grinding</li><li>Sinker EDM</li><li>Laser cutting</li></ul>",
+        "t5_title": "Quality Control",
+        "t5_desc": "Measurement and inspection of parts using modern measuring instruments. Ensuring conformance with technical drawings.<ul><li>Max. dimensions: 900 × 1,000 × 600 mm</li><li>Resolution: 0.0001 mm (0.1 μm)</li><li>Max. workpiece weight: 1,200 kg</li></ul>"
+    },
+    "images": {}
+}
